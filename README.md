@@ -1,2 +1,5 @@
 # ryanize-bib
-Ryanize .bib file
+
+Ryanize .bib file.
+
+TODO description

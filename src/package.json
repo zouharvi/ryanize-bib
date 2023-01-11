@@ -1,0 +1,28 @@
+{
+  "main": "webpack.config.js",
+  "devDependencies": {
+    "@types/jquery": "^3.5",
+    "ts-loader": "^9",
+    "typescript": "^4.5",
+    "webpack": "^5.68",
+    "webpack-cli": "^4.9",
+    "webpack-dev-server": "^4.7",
+    "bibtex": "^0.9.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=production",
+    "build_dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch ",
+    "dev": "webpack-dev-server --mode=development --open",
+    "dev_prod": "webpack-dev-server --mode=production --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zouharvi/abstract-to-title"
+  },
+  "dependencies": {
+    "bibtex": "^0.9.0",
+    "bibtex-parser-js": "^0.0.2"
+  }
+}

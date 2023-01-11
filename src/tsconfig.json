@@ -1,0 +1,14 @@
+{ 
+    "compilerOptions": { 
+        "module": "ES2022", 
+        "target": "ES2021", 
+        "outDir": "./web/", 
+        "noImplicitAny": false, 
+        "sourceMap": true, 
+        "strict": false, 
+        "resolveJsonModule": true, 
+        "esModuleInterop": true, 
+        "moduleResolution": "node" 
+    },
+    "include": ["src/**/*", "src/*"],
+} 

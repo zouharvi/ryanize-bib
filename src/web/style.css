@@ -1,0 +1,164 @@
+body {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+#main_editable, #control_panel {
+    border: 2px solid black;
+    padding: 20px;
+    background-color: #fff;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    vertical-align: top;
+}
+
+#control_panel {
+    width: 200px;
+}
+
+#control_panel input[type="button"] {
+    width: 100%;
+}
+
+#main_editable {
+    width: 60%;
+    min-height: 800px;
+    resize: none;
+    max-width: 800px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    overflow-wrap: normal;
+    white-space: pre;
+
+    font-family: "Roboto Mono" "Consolas" "Courier New" "monospace" !important;
+}
+
+#main_editable:focus {
+    outline: 0;
+}
+
+
+#main_text_area {
+    width: 1220px;
+    min-height: 450px;
+    font-size: larger;
+    text-align: justify;
+}
+
+#active_response_area_template {
+    display: none;
+    visibility: none;
+}
+
+#main_text_area iframe {
+    width: 95%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    padding-bottom: 0px;
+    margin-bottom: -10px;
+}
+
+.active_response_area {
+    border-style: dashed;
+    width: 95%;
+    background-color: #ddebdb;
+    padding: 20px;
+    text-align: left;
+}
+
+.active_response_area img {
+    vertical-align: top;
+    max-width: 44%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.active_response_area div {
+    vertical-align: top;
+    max-width: 51%;
+    /* display: inline-block; */
+    float: right;
+}
+
+.active_response_area div input {
+    display: inline-block;
+}
+
+.active_response_area div input[type=button] {
+    display: inline-block;
+    border: 2px solid black;
+    background-color: white;
+    width: 111px;
+}
+
+.active_response_area div input[responseselect] {
+    background-color: #7c857c;
+}
+
+.active_response_area div input[type=button]:hover {
+    background-color: #bbb;
+    cursor: pointer;
+}
+
+.active_response_area div input[type=button]:active {
+    border: 2px solid gray;
+    cursor: pointer;
+}
+
+#instruction_area {
+    width: 850px;
+    text-align: left;
+}
+
+#phases_area {
+    text-align: left;
+    width: 300px;
+    line-height: 1.8em;
+}
+
+.phase_progress, .phase_done, .phase_locked {
+    width: 100px;
+    text-align: center;
+    border: 2px solid black;
+    padding-bottom: 5px;
+    padding-top: 0px;
+    height: 18px;
+    float: right;
+}
+
+#phases_area .phase_progress {
+    font-weight: bold;
+    background-color: #fdf;
+    border-color: #cbc;
+}
+
+#phases_area .phase_done {
+    font-style: italic;
+    background-color: #dfd;
+    border-color: #bcb;
+}
+
+#phases_area .phase_locked {
+    font-style: italic;
+    background-color: #ddd;
+    border-color: #bbb;
+}
+
+#but_next, #but_prev {
+    width: 145px;
+    height: 40px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 22px;
+}
+
+.hi_input_val {
+    margin-left: 150px;
+}
+.hi_input_label {
+    margin-left: 20px;
+    vertical-align: top;
+}
