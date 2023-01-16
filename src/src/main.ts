@@ -51,22 +51,10 @@ const DEFAULT_TEXT = `
 
 $("#main_editable").html(DEFAULT_TEXT)
 
+// prevent rich style pasting
 document.querySelector("#main_editable").addEventListener("paste", function(e) {
-  e.preventDefault();
-  var text = (e as any).clipboardData.getData("text/plain");
+    e.preventDefault();
+    var text = (e as any).clipboardData.getData("text/plain");
 
-  document.execCommand("insertText", false, text);
+    document.execCommand("insertText", false, text);
 });
-
-// @inproceedings{galle2019investigating,
-//   title = "Investigating the Effectiveness of {BPE}: The Power of Shorter Sequences",
-//   author = {Gall{\'e}, Matthias},
-//   booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-//   month = nov,
-//   year = "2019",
-//   address = "Hong Kong, China",
-//   publisher = "Association for Computational Linguistics",
-//   url = "https://aclanthology.org/D19-1141",
-//   doi = "10.18653/v1/D19-1141",
-//   pages = "1375--1381",
-// }

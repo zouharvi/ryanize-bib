@@ -19,7 +19,6 @@ function formatText(text: string) {
             prevLine = line
             line = line.replace("= ", "=").replace(" =", "=")
         }
-        console.log(line)
         // bracket everything
         line=line.replace('="', '={')
         line = (line+",").replace(",,", ",")
@@ -136,21 +135,16 @@ function setup_navigation() {
 
         // $("#main_editable").html($("#main_editable").html()+" ")
         let text = $("#main_editable").html() as string
+        text = text.trim()
         // remove html tags
         text = text.replaceAll("<br>", "\n")
-        // text = text.replace(/<(.|\n)*?>/g, '')
+        text = text.replace(/<(.|\n)*?>/g, '')
         text = formatText(text)
         const bibFile = parseBibFile(text)
 
         text = dumpEntries(bibFile["entries$"])
         $("#main_editable").html(text)
-    })
-
-    // $("#main_editable").on("input paste", (event) => {
-    //     // $("#main_editable").html($("#main_editable").html() + " ")
-    //     console.log($("#main_editable").html().includes("<br>"))
-    // })
-    
+    })    
 }
 
 
