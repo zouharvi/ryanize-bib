@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    
+
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -11,25 +11,43 @@
     <!-- <meta name="viewport" content="width=device-width,initial-scale=0.9"> -->
     <!-- <meta name="theme-color" content="#efefef"> -->
 
-    <title>Ryanize .bib</title>
+    <title>Ryanize bib</title>
     <link rel="shortcut icon" href="#" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-      
+
 
     <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto&display=swap'>
     <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto Mono&display=swap'>
-    <link rel='stylesheet' type='text/css' href='style.css?r=0'>
+    <link rel='stylesheet' type='text/css' href='style.css?r=1'>
 </head>
 
 <body style='text-align: center; margin-bottom: 20px; padding-top: 30px;'>
-        <textarea id="main_editable"></textarea>
-        <div id="control_panel">
-            <h3>Ryanize .bib</h3>
-            <input id="button_go" type="button" value="go">
+    <div contentEditable="true" id="main_editable"></div>
+    <div id="control_panel">
+        <h3>Ryanize bib</h3>
+        <a href="https://github.com/zouharvi/ryanize-bib">github.com/zouharvi/ryanize-bib</a>
+        <br><br>
+
+        <div style="text-align: left">
+            <input checked type="checkbox" id="check_url" name="check_url" value="URL">
+            <label for="check_url">check URL</label><br>
+
+            <input checked type="checkbox" id="check_capital" name="check_capital" value="Capitalization">
+            <label for="check_capital">capitalization protection</label><br>
+
+            <input checked type="checkbox" id="check_arxiv" name="check_arxiv" value="arXiv">
+            <label for="check_arxiv">discourage arXiv</label><br>
+
+            <input checked type="checkbox" id="check_publisher" name="check_publisher" value="Publisher">
+            <label for="check_publisher">publisher</label><br>
         </div>
+
+
+        <input id="button_go" type="button" value="process">
     </div>
-    <script src='web-source.js?r=2'></script>
+    </div>
+    <script src='web-source.js?r=3'></script>
 </body>
 
 </html>

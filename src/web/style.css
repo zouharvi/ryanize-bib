@@ -30,6 +30,10 @@ body{
     );
 }
 
+.line_warning {
+    background-color: #d69027;
+}
+
 #main_editable, #control_panel {
     border: 2px solid black;
     padding: 20px;
@@ -42,10 +46,19 @@ body{
 
 #control_panel {
     width: 200px;
+    padding-top: 0px;
+}
+
+#control_panel a {
+    color: black;
+    text-decoration: underline;
+    font-size: 0.85em;
 }
 
 #control_panel input[type="button"] {
     width: 100%;
+    height: 40px;
+    margin-top:20px;
 }
 
 #main_editable {
@@ -57,8 +70,9 @@ body{
     overflow-x: scroll;
     overflow-wrap: normal;
     white-space: pre;
-
-    font-family: "Roboto Mono" "Consolas" "Courier New" "monospace" !important;
+    font-size: 0.9em;
+    font-family: "monospace" !important;
+    text-align: left;
 }
 
 #main_editable:focus {
