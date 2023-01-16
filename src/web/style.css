@@ -2,6 +2,34 @@ body {
     font-family: Roboto, Arial, Helvetica, sans-serif;
 }
 
+/* https://freefrontend.com/css-background-patterns/ */
+body{
+    padding: 0;
+    margin: 0;
+    background-color: #88d485;
+    background-size: 56px 56px;
+    background-image:
+    linear-gradient(
+        135deg,
+        transparent 55%,
+        #c2dfaf 55%
+    ),
+     radial-gradient(
+        transparent 6px,
+        #ffffff 6px,
+        #ffffff 10px,
+        transparent 10px,
+        transparent 15px,
+        #ffffff 15px,
+        #ffffff 19px,
+        transparent 19px,
+        transparent 24px,
+        #ffffff 24px,
+        #ffffff 28px,
+        transparent 28px
+    );
+}
+
 #main_editable, #control_panel {
     border: 2px solid black;
     padding: 20px;
