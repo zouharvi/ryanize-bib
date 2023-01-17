@@ -1,8 +1,6 @@
 import { DEVMODE } from "./globals"
 export var UID: string
-import { load_data } from './connector'
 import { setup_navigation } from "./worker_website"
-import { range } from "./utils";
 
 setup_navigation()
 

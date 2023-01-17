@@ -1,10 +1,8 @@
-import { log_data } from "./connector";
 import { DEVMODE } from "./globals";
-import { getIndicies } from "./utils";
-import { parseBibFile, type } from "bibtex";
+import { flattenBraced, shouldCapitalProtect } from "./utils";
+import { parseBibFile } from "bibtex";
 
-let main_text_area = $("#main_text_area")
-let active_response_area_template = $("#active_response_area_template")
+let main_editable = $("#main_editable")
 
 let CHECK_ARXIV = false
 let CHECK_PUBLISHER = false
@@ -66,12 +64,6 @@ function preprocessText(text: string) {
     return output.join("\n")
 }
 
-function flattenBraced(object) {
-    if (typeof(object) != "object") {
-        return object
-    }
-    return "{" + object["data"].map(flattenBraced).join("") + "}"
-}
 
 function checkEntriesAndDump(entries: Object) {
     // big function which should be split up
@@ -110,7 +102,7 @@ function checkEntriesAndDump(entries: Object) {
                 fieldDataTxt = ""
                 for(let word_i in words) {
                     let word = words[word_i]
-                    if (word.length >= 2 && word.toUpperCase() == word && (!word.includes("{") || !word.includes("}"))) {
+                    if (shouldCapitalProtect(word) && (!word.includes("{") || !word.includes("}"))) {
                         fieldDataTxt += `<span class="line_warning">${word}</span> `
                         continue
                     }
@@ -169,8 +161,8 @@ function setup_navigation() {
         CHECK_PUBLISHER = $("#check_publisher").is(":checked")
         CHECK_CAPITAL = $("#check_capital").is(":checked")
 
-        // $("#main_editable").html($("#main_editable").html()+" ")
-        let text = $("#main_editable").html() as string
+        // main_editable.html(main_editable.html()+" ")
+        let text = main_editable.html() as string
         text = text.trim()
 
         // remove html tags
@@ -184,7 +176,7 @@ function setup_navigation() {
         text = preprocessText(text)
         text = preprocessText(text)
 
-        $("#main_editable").html(text)
+        main_editable.html(text)
 
         let bibFile;
         try {
@@ -197,12 +189,12 @@ function setup_navigation() {
         let output = checkEntriesAndDump(bibFile["entries$"])
         text = output[0] as string
 
-        $("#main_editable").html(text)
+        main_editable.html(text)
         
         $("#process_log").html(`${output[1]} problems found`)
 
-        $("#main_editable").scrollTop(0)
-        $("#main_editable").scrollLeft(0)
+        main_editable.scrollTop(0)
+        main_editable.scrollLeft(0)
     })    
 }
 

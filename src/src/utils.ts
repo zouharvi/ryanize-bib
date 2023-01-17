@@ -1,22 +1,21 @@
-function getIndicies(needle: string, hay: string, caseSensitive) {
-    var searchStrLen = needle.length;
-    if (searchStrLen == 0) {
-        return [];
+import { number } from "bibtex"
+
+function flattenBraced(object) {
+    if (typeof(object) != "object") {
+        return object
     }
-    var startIndex = 0, index, indices = [];
-    if (!caseSensitive) {
-        hay = hay.toLowerCase();
-        needle = needle.toLowerCase();
-    }
-    while ((index = hay.indexOf(needle, startIndex)) > -1) {
-        indices.push(index);
-        startIndex = index + searchStrLen;
-    }
-    return indices;
+    return "{" + object["data"].map(flattenBraced).join("") + "}"
 }
 
-function range(start, end) {
-    return Array.from({ length: end - start + 1 }, (_, i) => i)
+function shouldCapitalProtect(word: string) : boolean {
+    let prevCapitalLetter = false
+    for(let c in  [...word]) {
+        let isCapitalLetter = c.match(/[A-Z]/i) && c.toUpperCase() == c
+        if (isCapitalLetter && prevCapitalLetter) {
+            return true
+        }
+    }
+    return false
 }
 
-export { getIndicies, range }
+export { flattenBraced, shouldCapitalProtect }
