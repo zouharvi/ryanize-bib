@@ -19,6 +19,14 @@ function preprocessText(text: string) {
 
     text.split("\n").forEach((line) => {
         line = line.trim()
+        
+        let prevLine = ""
+        // hacky way to remove space around equality
+        while (prevLine != line) {
+            prevLine = line
+            line = line.replace("= ", "=").replace(" =", "=")
+        }
+        line = line.replace('="', "={").replace('",', "}")
         if (insideEntry) {
             output[output.length-1] += " " + line
 
@@ -26,13 +34,6 @@ function preprocessText(text: string) {
                 insideEntry = false
             }
             return
-        }
-
-        let prevLine = ""
-        // hacky way to remove space around equality
-        while (prevLine != line) {
-            prevLine = line
-            line = line.replace("= ", "=").replace(" =", "=")
         }
         // bracket everything
         line=line.replace('="', '={')
@@ -178,7 +179,11 @@ function setup_navigation() {
         text = text.replace(/\n\s*\n/g, '\n');
 
         text = text.replace(/<(.|\n)*?>/g, '')
+        // for some reason running it twice makes it works
+        // we're going full LaTeX here
         text = preprocessText(text)
+        text = preprocessText(text)
+
         $("#main_editable").html(text)
 
         let bibFile;
