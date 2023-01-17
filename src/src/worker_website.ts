@@ -78,11 +78,17 @@ function checkEntriesAndDump(entries: Object) {
         out += `@${entry["type"]}{${key},\n`
 
         let hasURL = false
+        let hasDOI = false
         for(let field in entry["fields"]) {
             if (field == "url") {
                 hasURL = true
             }
+            if (field == "doi") {
+                hasDOI = true
+            }
+        }
 
+        for(let field in entry["fields"]) {
             let fieldDataTxt = ""
             let fieldData = entry["fields"][field]["data"]
             while (fieldData.length == 1 && typeof(fieldData[0]) == "object") {
@@ -139,8 +145,8 @@ function checkEntriesAndDump(entries: Object) {
 
         }
         
-        if (!hasURL && CHECK_URL) {
-            out += `    <span class="line_warning">url={URL MISSING}</span>,\n`
+        if (!hasURL && !hasDOI && CHECK_URL) {
+            out += `    <span class="line_warning">url={URL/DOI MISSING}</span>,\n`
         }
 
         out += `}\n\n`

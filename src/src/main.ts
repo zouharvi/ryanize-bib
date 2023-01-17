@@ -41,11 +41,11 @@ const DEFAULT_TEXT = `
     year = "2019",
     address = "Hong Kong, China",
     publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/D19-1141",
     doi = "10.18653/v1/D19-1141",
     pages = "1375--1381",
-}
-`
+  }
+  `
+  // url = "https://aclanthology.org/D19-1141",
 
 $("#main_editable").html(DEFAULT_TEXT)
 
