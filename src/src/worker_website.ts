@@ -20,7 +20,11 @@ function preprocessText(text: string) {
     text.split("\n").forEach((line) => {
         line = line.trim()
         if (insideEntry) {
-            output[output.length-1] += line
+            output[output.length-1] += " " + line
+
+            if (!line.includes("{") && line.includes("}")) {
+                insideEntry = false
+            }
             return
         }
 
@@ -46,14 +50,8 @@ function preprocessText(text: string) {
         if (line.includes("{") && !line.includes("}")) {
             insideEntry = true
             line = (line+"$").replace(",$", "")
-
+            
             output.push(line)
-            return
-        }
-        // opposite case
-        if (!line.includes("{") && line.includes("}")) {
-            insideEntry = false
-            output[output.length-1] += line
             return
         }
         line = line.replace("=", "={")
@@ -181,6 +179,7 @@ function setup_navigation() {
 
         text = text.replace(/<(.|\n)*?>/g, '')
         text = preprocessText(text)
+        $("#main_editable").html(text)
 
         let bibFile;
         try {
@@ -196,6 +195,9 @@ function setup_navigation() {
         $("#main_editable").html(text)
         
         $("#process_log").html(`${output[1]} problems found`)
+
+        $("#main_editable").scrollTop(0)
+        $("#main_editable").scrollLeft(0)
     })    
 }
 
