@@ -34,6 +34,11 @@ body{
     background-color: #88d485;
 }
 
+#process_log {
+    margin-top: 10px;
+    text-align: left;
+}
+
 #main_editable, #control_panel {
     border: 2px solid black;
     padding: 20px;

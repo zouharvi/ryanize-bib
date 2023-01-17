@@ -11,8 +11,19 @@ let CHECK_PUBLISHER = false
 let CHECK_CAPITAL = false
 let CHECK_URL = false
 
-function formatText(text: string) {
-    return text.split("\n").map((line) => {
+function preprocessText(text: string) {
+    // make sure that the input is somewhat canonized and readable by
+    // the bibtex module which is otherwise conservative
+    let insideEntry = false
+    let output:Array<string> = []
+
+    text.split("\n").forEach((line) => {
+        line = line.trim()
+        if (insideEntry) {
+            output[output.length-1] += line
+            return
+        }
+
         let prevLine = ""
         // hacky way to remove space around equality
         while (prevLine != line) {
@@ -24,22 +35,36 @@ function formatText(text: string) {
         line = (line+",").replace(",,", ",")
         line=line.replace('",', '},')
         if (!line.includes("=")) {
-            return line
+            output.push(line)
+            return
         }
         if (line.includes("{") && line.includes("}")) {
-            return line
+            output.push(line)
+            return
+        }
+        // special case where the entry starts here but doesn't end here
+        if (line.includes("{") && !line.includes("}")) {
+            insideEntry = true
+            line = (line+"$").replace(",$", "")
+
+            output.push(line)
+            return
+        }
+        // opposite case
+        if (!line.includes("{") && line.includes("}")) {
+            insideEntry = false
+            output[output.length-1] += line
+            return
         }
         line = line.replace("=", "={")
         
-        // manual add trailing commas
-        // we can add them everywhere because in `dumpEntries` we unpack everything
-        // if (!line.includes(",")) {
-        //     line += ","
-        // }
         let lastComma = line.lastIndexOf(",")
         line = line.substring(0, lastComma) + '},' + line.substring(lastComma + 1)
-        return line
-    }).join("\n")
+
+        output.push(line)
+    })
+    
+    return output.join("\n")
 }
 
 function flattenBraced(object) {
@@ -49,7 +74,10 @@ function flattenBraced(object) {
     return "{" + object["data"].map(flattenBraced).join("") + "}"
 }
 
-function dumpEntries(entries: Object) {
+function checkEntriesAndDump(entries: Object) {
+    // big function which should be split up
+    // does both checking and formatting the output
+
     let out = ""
     for (let key in entries) {
         let entry = entries[key]
@@ -123,7 +151,16 @@ function dumpEntries(entries: Object) {
 
         out += `}\n\n`
     }
-    return out
+
+    let error_count = out.split("\n").map((line) => {
+        if (line.includes("line_warning")) {
+            return 1
+        } else {
+            return 0
+        }
+    }).reduce((sum, current) => sum + current, 0);
+
+    return [out, error_count]
 }
 
 function setup_navigation() {
@@ -136,14 +173,29 @@ function setup_navigation() {
         // $("#main_editable").html($("#main_editable").html()+" ")
         let text = $("#main_editable").html() as string
         text = text.trim()
+
         // remove html tags
         text = text.replaceAll("<br>", "\n")
-        text = text.replace(/<(.|\n)*?>/g, '')
-        text = formatText(text)
-        const bibFile = parseBibFile(text)
+        // collapse multiple newlines together
+        text = text.replace(/\n\s*\n/g, '\n');
 
-        text = dumpEntries(bibFile["entries$"])
+        text = text.replace(/<(.|\n)*?>/g, '')
+        text = preprocessText(text)
+
+        let bibFile;
+        try {
+            bibFile = parseBibFile(text)
+        } catch {
+            $("#process_log").html(`Can't parse the bibfile :-(<br>Make sure it's formatted correctly`)
+            return
+        }
+        
+        let output = checkEntriesAndDump(bibFile["entries$"])
+        text = output[0] as string
+
         $("#main_editable").html(text)
+        
+        $("#process_log").html(`${output[1]} problems found`)
     })    
 }
 
