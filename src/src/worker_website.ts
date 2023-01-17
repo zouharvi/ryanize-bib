@@ -24,11 +24,14 @@ function preprocessText(text: string) {
             prevLine = line
             line = line.replace("= ", "=").replace(" =", "=")
         }
+        // normalize to use {} instead of ""
         line = line.replace('="', "={").replace('",', "}")
+
+        // this is a very hacky way (as this whole function) to do stuff absed on if we're inside a value or not
         if (insideEntry) {
             output[output.length-1] += " " + line
 
-            if (!line.includes("{") && line.includes("}")) {
+            if (!line.includes("={") && line.replaceAll(",", "").endsWith("}")) {
                 insideEntry = false
             }
             return
@@ -41,12 +44,12 @@ function preprocessText(text: string) {
             output.push(line)
             return
         }
-        if (line.includes("{") && line.includes("}")) {
+        if (line.includes("={") && line.replaceAll(",", "").endsWith("}")) {
             output.push(line)
             return
         }
         // special case where the entry starts here but doesn't end here
-        if (line.includes("{") && !line.includes("}")) {
+        if (line.includes("={") && !line.replaceAll(",", "").endsWith("}")) {
             insideEntry = true
             line = (line+"$").replace(",$", "")
             
