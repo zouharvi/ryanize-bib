@@ -7,13 +7,16 @@ function flattenBraced(object) {
     return "{" + object["data"].map(flattenBraced).join("") + "}"
 }
 
-function shouldCapitalProtect(word: string) : boolean {
+function shouldCapitalProtect(_word: string) : boolean {
     let prevCapitalLetter = false
-    for(let c in  [...word]) {
-        let isCapitalLetter = c.match(/[A-Z]/i) && c.toUpperCase() == c
+    let word = [..._word]
+    for(let i in  word) {
+        let c = word[i]
+        let isCapitalLetter = (c.toUpperCase() != c.toLowerCase()) && c.toUpperCase() == c
         if (isCapitalLetter && prevCapitalLetter) {
             return true
         }
+        prevCapitalLetter = isCapitalLetter
     }
     return false
 }
