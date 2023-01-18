@@ -8,6 +8,7 @@ let CHECK_ARXIV = false
 let CHECK_PUBLISHER = false
 let CHECK_CAPITAL = false
 let CHECK_URL = false
+let CHECK_ABSTRACT = false
 
 function preprocessText(text: string) {
     // make sure that the input is somewhat canonized and readable by
@@ -68,91 +69,101 @@ function preprocessText(text: string) {
 }
 
 
-function checkEntriesAndDump(entries: Object) {
+function processEntry(key, entry): string {
     // big function which should be split up
     // does both checking and formatting the output
 
-    let out = ""
-    for (let key in entries) {
-        let entry = entries[key]
-        out += `@${entry["type"]}{${key},\n`
+    let out = `@${entry["type"]}{${key},\n`
 
-        let hasURL = false
-        let hasDOI = false
-        for(let field in entry["fields"]) {
-            if (field == "url") {
-                hasURL = true
-            }
-            if (field == "doi") {
-                hasDOI = true
-            }
+    let hasURL = false
+    let hasDOI = false
+    for(let field in entry["fields"]) {
+        if (field == "url") {
+            hasURL = true
+        }
+        if (field == "doi") {
+            hasDOI = true
+        }
+    }
+
+    for(let field in entry["fields"]) {
+        let fieldDataTxt = ""
+        let fieldData = entry["fields"][field]["data"]
+        while (fieldData.length == 1 && typeof(fieldData[0]) == "object") {
+            fieldData = fieldData[0]["data"]
+        }
+        for (let element in fieldData) {
+            fieldDataTxt += flattenBraced(fieldData[element])
+        }
+        
+        if (CHECK_ABSTRACT && field=="abstract") {
+            fieldDataTxt = '<span class="line_warning">' + fieldDataTxt + '</span>'
         }
 
-        for(let field in entry["fields"]) {
-            let fieldDataTxt = ""
-            let fieldData = entry["fields"][field]["data"]
-            while (fieldData.length == 1 && typeof(fieldData[0]) == "object") {
-                fieldData = fieldData[0]["data"]
-            }
-            for (let element in fieldData) {
-                fieldDataTxt += flattenBraced(fieldData[element])
-            }
+        if (CHECK_ARXIV && field=="journal") {
+            fieldDataTxt = fieldDataTxt.replaceAll("arXiv", '<span class="line_warning">arXiv</span>')
+            fieldDataTxt = fieldDataTxt.replaceAll("arxiv", '<span class="line_warning">arxiv</span>')
+        }
 
-            if (CHECK_ARXIV && field=="journal") {
-                fieldDataTxt = fieldDataTxt.replaceAll("arXiv", '<span class="line_warning">arXiv</span>')
-                fieldDataTxt = fieldDataTxt.replaceAll("arxiv", '<span class="line_warning">arxiv</span>')
-            }
-
-            if (CHECK_CAPITAL && field =="title") {
-                // BibTeX removes double spaces anyway
-                fieldDataTxt = fieldDataTxt.replace(/\s+/g,' ')
-                let words = fieldDataTxt.split(" ")
-                // reset output
-                fieldDataTxt = ""
-                for(let word_i in words) {
-                    let word = words[word_i]
-                    if (shouldCapitalProtect(word) && (!word.includes("{") || !word.includes("}"))) {
+        if (CHECK_CAPITAL && field =="title") {
+            // BibTeX removes double spaces anyway
+            fieldDataTxt = fieldDataTxt.replace(/\s+/g,' ')
+            let words = fieldDataTxt.split(" ")
+            // reset output
+            fieldDataTxt = ""
+            for(let word_i in words) {
+                let word = words[word_i]
+                if (shouldCapitalProtect(word) && (!word.includes("{") || !word.includes("}"))) {
+                    fieldDataTxt += `<span class="line_warning">${word}</span> `
+                    continue
+                }
+                let word_i_num = parseInt(word_i)
+                if (word_i_num > 0 && (!word.includes("{") || !word.includes("}"))){
+                    let prev_word = words[`${word_i_num-1}`]
+                    if (prev_word.at(-1) == ":") {
                         fieldDataTxt += `<span class="line_warning">${word}</span> `
                         continue
                     }
-                    let word_i_num = parseInt(word_i)
-                    if (word_i_num > 0 && (!word.includes("{") || !word.includes("}"))){
-                        let prev_word = words[`${word_i_num-1}`]
-                        if (prev_word.at(-1) == ":") {
-                            fieldDataTxt += `<span class="line_warning">${word}</span> `
-                            continue
-                        }
-                    }
-                    fieldDataTxt += word + " "
                 }
-                fieldDataTxt = fieldDataTxt.trim()
+                fieldDataTxt += word + " "
             }
-
-            if (CHECK_PUBLISHER && field == "publisher") {
-                if (["article", "journal", "inproceeding"].includes(entry["type"])) {
-                    out += `    ${field}=<span class="line_warning">{${fieldDataTxt}}</span>,\n`
-                }
-                continue
-            }
-
-            if (field == "url" && fieldDataTxt == "URL MISSING") {
-                if (CHECK_URL) {
-                    out += `    <span class="line_warning">url={URL MISSING}</span>,\n`
-                }
-            } else {
-                out += `    ${field}={${fieldDataTxt}},\n`
-            }
-
-        }
-        
-        if (!hasURL && !hasDOI && CHECK_URL) {
-            out += `    <span class="line_warning">url={URL/DOI MISSING}</span>,\n`
+            fieldDataTxt = fieldDataTxt.trim()
         }
 
-        out += `}\n\n`
+        if (CHECK_PUBLISHER && field == "publisher") {
+            if (["article", "journal", "inproceeding"].includes(entry["type"])) {
+                out += `    ${field}=<span class="line_warning">{${fieldDataTxt}}</span>,\n`
+            }
+            continue
+        }
+
+        if (field == "url" && fieldDataTxt == "URL/DOI MISSING") {
+            if (CHECK_URL) {
+                out += `    url=<span class="line_warning">{URL/DOI MISSING}</span>,\n`
+            }
+        } else {
+            out += `    ${field}={${fieldDataTxt}},\n`
+        }
+
+    }
+    
+    if (!hasURL && !hasDOI && CHECK_URL) {
+        out += `    url=<span class="line_warning">{URL/DOI MISSING}</span>,\n`
     }
 
-    let error_count = out.split("\n").map((line) => {
+    out += `}`
+
+    return out
+}
+
+function checkEntriesAndDump(entries: Object) {
+    let out = []
+    for (let key in entries) {
+        let entry = entries[key]
+        out.push(processEntry(key, entry))
+    }
+
+    let error_count = out.map((line) => {
         if (line.includes("line_warning")) {
             return 1
         } else {
@@ -160,13 +171,14 @@ function checkEntriesAndDump(entries: Object) {
         }
     }).reduce((sum, current) => sum + current, 0);
 
-    return [out, error_count]
+    return [out.join("\n\n"), error_count]
 }
 
 function setup_navigation() {
     $("#button_go").on("click", () => {
         CHECK_URL = $("#check_url").is(":checked")
         CHECK_ARXIV = $("#check_arxiv").is(":checked")
+        CHECK_ABSTRACT = $("#check_abstract").is(":checked")
         CHECK_PUBLISHER = $("#check_publisher").is(":checked")
         CHECK_CAPITAL = $("#check_capital").is(":checked")
 
@@ -185,6 +197,10 @@ function setup_navigation() {
         text = preprocessText(text)
         text = preprocessText(text)
 
+
+        // yank comments
+        let comments = text.split("\n").filter((line) => line.trim().startsWith("%")).join("\n")
+
         main_editable.html(text)
 
         let bibFile;
@@ -198,9 +214,16 @@ function setup_navigation() {
         let output = checkEntriesAndDump(bibFile["entries$"])
         text = output[0] as string
 
-        main_editable.html(text)
+        let logMessage = `${output[1]} problems found`
+
+        if (comments.length >0) {
+            logMessage += "\nComments were moved to the top (they are not fully supported yet)"
+            main_editable.html(comments + "\n\n" + text)
+        } else {
+            main_editable.html(text)
+        }
         
-        $("#process_log").html(`${output[1]} problems found`)
+        $("#process_log").html(logMessage)
 
         main_editable.scrollTop(0)
         main_editable.scrollLeft(0)

@@ -1,5 +1,3 @@
-import { number } from "bibtex"
-
 function flattenBraced(object) {
     if (typeof(object) != "object") {
         return object

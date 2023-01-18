@@ -67,14 +67,15 @@ body{
 }
 
 #main_editable {
-    width: 60%;
-    min-height: 800px;
+    width: 70%;
+    min-height: 500px;
     resize: none;
-    max-width: 800px;
+    max-width: 1000px;
+    max-height: 90vh;
     overflow-y: scroll;
     overflow-x: scroll;
     overflow-wrap: normal;
-    white-space: pre;
+    white-space: break-spaces;
     font-size: 0.9em;
     font-family: "monospace" !important;
     text-align: left;

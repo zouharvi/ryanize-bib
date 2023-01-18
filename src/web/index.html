@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto&display=swap'>
     <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Roboto Mono&display=swap'>
-    <link rel='stylesheet' type='text/css' href='style.css?r=4'>
+    <link rel='stylesheet' type='text/css' href='style.css?r=5'>
 </head>
 
 <body style='text-align: center; margin-bottom: 20px; padding-top: 30px;'>
@@ -28,26 +28,28 @@
         <h3>Ryanize bib</h3>
         <a href="https://github.com/zouharvi/ryanize-bib">github.com/zouharvi/ryanize-bib</a>
         <br><br>
-
+        
         <div style="text-align: left">
             <input checked type="checkbox" id="check_url" name="check_url" value="URL">
             <label for="check_url">check URL/DOI</label><br>
-
+            
             <input checked type="checkbox" id="check_capital" name="check_capital" value="Capitalization">
             <label for="check_capital">capitalization protection</label><br>
-
+            
             <input checked type="checkbox" id="check_arxiv" name="check_arxiv" value="arXiv">
             <label for="check_arxiv">discourage arXiv</label><br>
-
+            
+            <input checked type="checkbox" id="check_abstract" name="check_abstract" value="Abstract">
+            <label for="check_abstract">discourage abstract</label><br>
+            
             <input checked type="checkbox" id="check_publisher" name="check_publisher" value="Publisher">
-            <label for="check_publisher">publisher</label><br>
+            <label for="check_publisher">discourage publisher</label><br>
         </div>
-
+        
         <input id="button_go" type="button" value="find mistakes">
         <div id="process_log"></div>
     </div>
-    </div>
-    <script src='web-source.js?r=10'></script>
+    <script src='web-source.js?r=13'></script>
 </body>
 
 </html>
