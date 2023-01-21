@@ -29,4 +29,3 @@ A window in your browser should open with live changes to code in `src/src`
 - fix, modularize & prettify code
 - unit tests
 - middle initials
-- search button

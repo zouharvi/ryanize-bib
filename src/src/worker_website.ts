@@ -10,6 +10,23 @@ let CHECK_CAPITAL = false
 let CHECK_URL = false
 let CHECK_ABSTRACT = false
 
+function preprocessTextMain(text: string) {
+    // trim whitespace
+    text = text.trim()
+
+    // remove html tags
+    text = text.replaceAll("<br>", "\n")
+    // collapse multiple newlines together
+    text = text.replace(/\n\s*\n/g, '\n');
+
+    text = text.replace(/<(.|\n)*?>/g, '')
+    // for some reason running it twice makes it works
+    // we're going full LaTeX here
+    text = preprocessText(text)
+    text = preprocessText(text)
+    return text
+}
+
 function preprocessText(text: string) {
     // make sure that the input is somewhat canonized and readable by
     // the bibtex module which is otherwise conservative
@@ -73,7 +90,6 @@ function processEntry(key, entry): string {
     // big function which should be split up
     // does both checking and formatting the output
 
-    
     let hasURL = false
     let hasDOI = false
     let title = ""
@@ -189,19 +205,7 @@ function setup_navigation() {
         CHECK_CAPITAL = $("#check_capital").is(":checked")
 
         // main_editable.html(main_editable.html()+" ")
-        let text = main_editable.html() as string
-        text = text.trim()
-
-        // remove html tags
-        text = text.replaceAll("<br>", "\n")
-        // collapse multiple newlines together
-        text = text.replace(/\n\s*\n/g, '\n');
-
-        text = text.replace(/<(.|\n)*?>/g, '')
-        // for some reason running it twice makes it works
-        // we're going full LaTeX here
-        text = preprocessText(text)
-        text = preprocessText(text)
+        let text = preprocessTextMain(main_editable.html() as string)
 
 
         // yank comments
@@ -210,7 +214,7 @@ function setup_navigation() {
         main_editable.html(text)
 
         let bibFile;
-        try {
+        try {   
             bibFile = parseBibFile(text)
         } catch {
             $("#process_log").html(`Can't parse the bibfile :-(<br>Make sure it's formatted correctly`)
