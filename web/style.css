@@ -49,6 +49,10 @@ body{
     vertical-align: top;
 }
 
+.search_button {
+    user-select: none;
+}
+
 #control_panel {
     width: 200px;
     padding-top: 0px;

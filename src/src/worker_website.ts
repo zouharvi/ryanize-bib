@@ -73,10 +73,10 @@ function processEntry(key, entry): string {
     // big function which should be split up
     // does both checking and formatting the output
 
-    let out = `@${entry["type"]}{${key},\n`
-
+    
     let hasURL = false
     let hasDOI = false
+    let title = ""
     for(let field in entry["fields"]) {
         if (field == "url") {
             hasURL = true
@@ -84,7 +84,13 @@ function processEntry(key, entry): string {
         if (field == "doi") {
             hasDOI = true
         }
+        if (field == "title"){
+            title = flattenBraced(entry["fields"][field])
+        }
     }
+    let search_url = `https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=${title.replaceAll(' ', '+').replaceAll('\'', '').replaceAll('{', '').replaceAll('}', '')}`
+    let search_button = `<input class="search_button" type="button" value="search" onclick="window.open('${search_url}', '_blank')">`
+    let out = `@${entry["type"]}{${key}, ${search_button}\n`
 
     for(let field in entry["fields"]) {
         let fieldDataTxt = ""

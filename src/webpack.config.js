@@ -19,11 +19,11 @@ module.exports = (env, argv) => {
       },
       output: {
          filename: 'web-source.js',
-         path: path.resolve(__dirname, 'web')
+         path: path.resolve(__dirname, '../web')
       },
       devServer: {
          static: {
-            directory: path.resolve(__dirname, 'web'),
+            directory: path.resolve(__dirname, '../web'),
          },
          headers: {
             "Access-Control-Allow-Origin": "*",
