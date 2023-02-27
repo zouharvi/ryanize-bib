@@ -100,7 +100,9 @@ function fix_entry(key: string) {
     fix_actions[key].forEach((action) => { text = action(text) });
     main_editable.html(text)
     // trigger lcick
+    let prev_scroll = main_editable.scrollTop()
     $("#button_go").trigger("click")
+    main_editable.scrollTop(prev_scroll)
 }
 // make it global
 globalThis.fix_entry = fix_entry
@@ -192,7 +194,12 @@ function processEntry(key, entry): string {
             fieldDataTxt = fieldDataTxt.trim()
             if (words_need_fixing) {
                 fix_actions[key].push((text) => {
-                    return text.replace(words.join(" "), correct_words.join(" "))
+                    text = text.replace(words.join(" "), correct_words.join(" "))
+                    // hack for the common "{ABC}: Title" format so that "TitleTitle:" is still parseable (though weird)
+                    if (text.lastIndexOf(":}") < text.length - 3) {
+                        text = text.replaceAll(":}", "}:")
+                    }
+                    return text
                 })
             }
         }
