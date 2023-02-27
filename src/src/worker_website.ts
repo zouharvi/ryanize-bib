@@ -94,8 +94,6 @@ function preprocessText(text: string) {
 
 let fix_actions = new Map<string, Array<(string) => string>>()
 function fix_entry(key: string) {
-    console.log(`fixing entry for ${key}`)
-    console.log(fix_actions)
     let text = main_editable.text();
     fix_actions[key].forEach((action) => { text = action(text) });
     main_editable.html(text)
@@ -183,7 +181,7 @@ function processEntry(key, entry): string {
                     let prev_word = words[`${word_i_num - 1}`]
                     if (prev_word.at(-1) == ":") {
                         fieldDataTxt += `<span class="line_warning">${word}</span> `
-                        correct_words.push(`{${word}}`)
+                        correct_words.push(`{${word[0].toUpperCase() + word.slice(1)}}`)
                         words_need_fixing = true
                         continue
                     }
@@ -211,10 +209,11 @@ function processEntry(key, entry): string {
                 fix_actions[key].push((text) => {
                     return text.replace(`publisher={${fieldDataTxt}},`, "")
                 })
+            } else {
+                out += `    ${field}={${fieldDataTxt}},\n`
             }
             continue
         }
-
         if (field == "url" && fieldDataTxt == "URL/DOI MISSING") {
             if (CHECK_URL) {
                 out += `    url=<span class="line_warning">{URL/DOI MISSING}</span>, ${search_button}\n`
