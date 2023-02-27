@@ -42,7 +42,6 @@ function preprocessText(text: string) {
 
     text.split("\n").forEach((line) => {
         line = line.trim()
-        console.log(line)
         
         let prevLine = ""
         // hacky way to remove space around equality
@@ -213,9 +212,19 @@ function checkEntriesAndDump(entries: Object) {
     return [out.join("\n\n"), error_count]
 }
 
-// function check_no_duplicate_keys(text: string) {
-//     let key = text.matchAll("@\w+\{(\w+),")
-// }
+function check_no_duplicate_keys(text: string) {
+    // take only the key
+    let keys = [...text.matchAll(/@\w+\{(\w+),/g)].map((a)=>a[1])
+    let keys_seen = new Set<string>()
+    let keys_dups = new Array<string>()
+    keys.forEach((key) => {
+        if (keys_seen.has(key)) {
+            keys_dups.push(key)
+        }
+        keys_seen.add(key)
+    })
+    return keys_dups
+}
 
 function setup_navigation() {
     $("#button_go").on("click", () => {
@@ -229,6 +238,11 @@ function setup_navigation() {
         // main_editable.html(main_editable.html()+" ")
         let text = preprocessTextMain(main_editable.html() as string)
 
+        let keys_dups = check_no_duplicate_keys(text)
+        if (keys_dups.length > 0) {
+            $("#process_log").html(`Won't parse the bibfile because is contains the following duplicate entries [<em>${keys_dups.join(", ")}</em>]`)
+            return 
+        }
 
         // yank comments
         let comments = text.split("\n").filter((line) => line.trim().startsWith("%")).join("\n")
