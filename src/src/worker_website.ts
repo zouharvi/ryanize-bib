@@ -23,6 +23,10 @@ function preprocessTextMain(text: string) {
     text = text.replace(/\n\s*\n/g, '\n');
 
     text = text.replace(/<(.|\n)*?>/g, '')
+    
+    // replace "}   ," with "}," (makes us or BibTeX flip out otherwise)
+    text = text.replace(/\}\s+,/g, '},')
+    
     // for some reason running it twice makes it works
     // we're going full LaTeX here
     text = preprocessText(text)
@@ -38,6 +42,7 @@ function preprocessText(text: string) {
 
     text.split("\n").forEach((line) => {
         line = line.trim()
+        console.log(line)
         
         let prevLine = ""
         // hacky way to remove space around equality
@@ -61,6 +66,7 @@ function preprocessText(text: string) {
         line=line.replace('="', '={')
         line = (line+",").replace(",,", ",")
         line=line.replace('",', '},')
+        
         if (!line.includes("=")) {
             output.push(line)
             return
@@ -78,7 +84,6 @@ function preprocessText(text: string) {
             return
         }
         line = line.replace("=", "={")
-        
         let lastComma = line.lastIndexOf(",")
         line = line.substring(0, lastComma) + '},' + line.substring(lastComma + 1)
 
@@ -207,6 +212,10 @@ function checkEntriesAndDump(entries: Object) {
 
     return [out.join("\n\n"), error_count]
 }
+
+// function check_no_duplicate_keys(text: string) {
+//     let key = text.matchAll("@\w+\{(\w+),")
+// }
 
 function setup_navigation() {
     $("#button_go").on("click", () => {
