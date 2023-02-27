@@ -32,6 +32,11 @@ const DEFAULT_TEXT = `
       url={https://www.sciencedirect.com/science/article/pii/S0019995865903323}
   }
   
+  @book{belltext,
+    title={Text compression},
+    author={Bell, Timothy C and Cleary, John G and Witten, Ian H},
+    publisher={Prentice-Hall, Inc.}
+  }
   
   @inproceedings{galle2019investigating,
     title = "Investigating the Effectiveness of BPE: The Power of Shorter Sequences",

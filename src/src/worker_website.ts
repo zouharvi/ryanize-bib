@@ -9,6 +9,9 @@ let CHECK_PUBLISHER = false
 let CHECK_CAPITAL = false
 let CHECK_URL = false
 let CHECK_ABSTRACT = false
+let CHECK_DUPLICATES = false
+
+let seen_titles = new Set<string>()
 
 function preprocessTextMain(text: string) {
     // trim whitespace
@@ -86,6 +89,7 @@ function preprocessText(text: string) {
 }
 
 
+
 function processEntry(key, entry): string {
     // big function which should be split up
     // does both checking and formatting the output
@@ -116,6 +120,14 @@ function processEntry(key, entry): string {
         }
         for (let element in fieldData) {
             fieldDataTxt += flattenBraced(fieldData[element])
+        }
+
+        if (CHECK_DUPLICATES && field == "title") {
+            let title_hash = fieldDataTxt.replace(/[^a-zA-Z]/gi, '')
+            if (seen_titles.has(title_hash)) {
+                fieldDataTxt = '<span class="line_warning">' + fieldDataTxt + '</span>'
+            }
+            seen_titles.add(title_hash)
         }
         
         if (CHECK_ABSTRACT && field=="abstract") {
@@ -203,6 +215,7 @@ function setup_navigation() {
         CHECK_ABSTRACT = $("#check_abstract").is(":checked")
         CHECK_PUBLISHER = $("#check_publisher").is(":checked")
         CHECK_CAPITAL = $("#check_capital").is(":checked")
+        CHECK_DUPLICATES = $("#check_duplicates").is(":checked")
 
         // main_editable.html(main_editable.html()+" ")
         let text = preprocessTextMain(main_editable.html() as string)
@@ -213,6 +226,8 @@ function setup_navigation() {
 
         main_editable.html(text)
 
+        // clear seen cache
+        seen_titles = new Set<string>()
         let bibFile;
         try {   
             bibFile = parseBibFile(text)
