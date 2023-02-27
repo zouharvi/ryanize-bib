@@ -4,7 +4,7 @@ Ryanize bib file:
 - check that URLs are included
 - check that important capital letters are protected
 - discourage arXiv and publisher usage
-- multi-line entries (i.e. author list split across multiple lines)
+- bunch of other bib etiquette rules
 
 Try it at [vilda.net/s/ryanize-bib/](https://vilda.net/s/ryanize-bib/).
 
