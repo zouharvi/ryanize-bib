@@ -265,6 +265,7 @@ function check_no_duplicate_keys(text: string) {
     let keys_seen = new Set<string>()
     let keys_dups = new Array<string>()
     keys.forEach((key) => {
+        key = key.toLowerCase()
         if (keys_seen.has(key)) {
             keys_dups.push(key)
         }
