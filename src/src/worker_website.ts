@@ -214,9 +214,9 @@ function processEntry(key, entry): string {
             }
             continue
         }
-        if (field == "url" && fieldDataTxt == "URL/DOI MISSING") {
+        if (field == "url" && fieldDataTxt == "URL_DOI_MISSING") {
             if (CHECK_URL) {
-                out += `    url=<span class="line_warning">{URL/DOI MISSING}</span>, ${search_button}\n`
+                out += `    url=<span class="line_warning">{URL_DOI_MISSING}</span>, ${search_button}\n`
             }
         } else {
             out += `    ${field}={${fieldDataTxt}},\n`
@@ -225,7 +225,7 @@ function processEntry(key, entry): string {
     }
 
     if (!hasURL && !hasDOI && CHECK_URL) {
-        out += `    url=<span class="line_warning">{URL/DOI MISSING}</span>, ${search_button}\n`
+        out += `    url=<span class="line_warning">{URL_DOI_MISSING}</span>, ${search_button}\n`
     }
 
     out += `}`
