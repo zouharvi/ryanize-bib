@@ -34,6 +34,11 @@ function preprocessTextMain(text: string) {
     return text
 }
 
+function postprocessTextMain(text: string) {
+    text = text.replaceAll("SYMBOL_AT", "@")
+    return text
+}
+
 function preprocessText(text: string) {
     // make sure that the input is somewhat canonized and readable by
     // the bibtex module which is otherwise conservative
@@ -51,6 +56,10 @@ function preprocessText(text: string) {
         }
         // normalize to use {} instead of ""
         line = line.replace('="', "={").replace('",', "}")
+
+        if (!line.startsWith("@")) {
+            line = line.replaceAll("@", "SYMBOL_AT")
+        }
 
         // this is a very hacky way (as this whole function) to do stuff absed on if we're inside a value or not
         if (insideEntry) {
@@ -309,6 +318,7 @@ function setup_navigation() {
 
         let output = checkEntriesAndDump(bibFile["entries$"])
         text = output[0] as string
+        text = postprocessTextMain(text)
 
         let logMessage = `${output[1]} problems found`
 
