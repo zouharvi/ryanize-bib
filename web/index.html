@@ -28,31 +28,35 @@
         <h3>Ryanize bib</h3>
         <a href="https://github.com/zouharvi/ryanize-bib">github.com/zouharvi/ryanize-bib</a>
         <br><br>
-        
+
         <div style="text-align: left">
             <input checked type="checkbox" id="check_url" name="check_url" value="URL">
             <label for="check_url">check URL/DOI</label><br>
-            
+
             <input checked type="checkbox" id="check_capital" name="check_capital" value="Capitalization">
             <label for="check_capital">capitalization protection</label><br>
-            
+
             <input type="checkbox" id="check_arxiv" name="check_arxiv" value="arXiv">
             <label for="check_arxiv">discourage arXiv</label><br>
-            
+
             <input checked type="checkbox" id="check_abstract" name="check_abstract" value="Abstract">
             <label for="check_abstract">discourage abstract</label><br>
-            
+
             <input checked type="checkbox" id="check_publisher" name="check_publisher" value="Publisher">
             <label for="check_publisher">discourage publisher</label><br>
-            
+
             <input checked type="checkbox" id="check_duplicates" name="check_duplicates" value="Duplicates">
             <label for="check_duplicates">check duplicates</label><br>
         </div>
-        
+
         <input id="button_go" type="button" value="find mistakes">
         <div id="process_log"></div>
     </div>
-    <script src='web-source.js?r=17'></script>
+    <script id="nocachescript"></script>
+    <script>
+        var randomNum = String((Math.floor(Math.random() * 10e10)));
+        document.getElementById('nocachescript').src = "web-source.js?t=" + randomNum;
+    </script>
 </body>
 
 </html>
