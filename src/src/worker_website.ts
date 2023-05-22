@@ -57,8 +57,11 @@ function preprocessText(text: string) {
         // normalize to use {} instead of ""
         line = line.replace('="', "={").replace('",', "}")
 
+        let add_comma = true
         if (!line.startsWith("@")) {
             line = line.replaceAll("@", "SYMBOL_AT")
+        } else {
+            add_comma = false
         }
 
         // this is a very hacky way (as this whole function) to do stuff absed on if we're inside a value or not
@@ -72,7 +75,9 @@ function preprocessText(text: string) {
         }
         // bracket everything
         line = line.replace('="', '={')
-        line = (line + ",").replace(",,", ",")
+        if (add_comma) {
+            line = (line + ",").replace(",,", ",")
+        }
         line = line.replace('",', '},')
 
         if (!line.includes("=")) {
