@@ -134,6 +134,9 @@ function processEntry(key, entry): string {
         if (field == "doi") {
             hasDOI = true
         }
+        if (field == "eprint") {
+            hasDOI = true
+        }
         if (field == "title") {
             title = flattenBraced(entry["fields"][field])
         }
