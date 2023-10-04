@@ -81,7 +81,7 @@ body{
     overflow-wrap: normal;
     white-space: break-spaces;
     font-size: 0.9em;
-    font-family: "monospace" !important;
+    font-family: "Roboto Mono" "monospace" !important;
     text-align: left;
 }
 
