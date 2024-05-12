@@ -27,9 +27,3 @@ npm run dev
 ```
 
 A window in your browser should open with live changes to code in `src/src`
-
-## TODO
-
-- fix, modularize & prettify code
-- unit tests
-- middle initials
